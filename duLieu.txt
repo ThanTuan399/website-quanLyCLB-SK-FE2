@@ -1,13 +1,54 @@
 Vai trò	Nhiệm vụ còn thiếu	Chi tiết cần bổ sung
-BE 1 (Core)	CRUD Club (Create, Update, Delete)	Trong club.controller.js chỉ có hàm đọc (getAllClubs, getClubDetail). Thiếu logic API cho việc Tạo, Sửa, Xóa CLB.
-BE 1 (Core)	API Phân quyền (Admin, Chủ nhiệm)	Còn thiếu: Logic kiểm tra quyền hạn (ví dụ: isAdminMiddleware, isManagerMiddleware). Hiện tại chỉ có authMiddleware chung.
-BE 2 (Events)	CRUD Event (Sửa, Xóa)	Trong event.controller.js chỉ có Tạo và Đọc danh sách. Thiếu logic API cho việc Sửa (updateEvent) và Xóa (deleteEvent) sự kiện.
-Project Lead	Luồng Phê duyệt (Approval Flow)	Đây là nghiệp vụ quan trọng nhất (Duyệt thành viên CLB, Duyệt Sự kiện). Hiện tại BE chưa có API để Chủ nhiệm/Admin thực hiện việc phê duyệt này.
+BE 1 (Core)	
+- CRUD Club (Create, Update, Delete)	
++ Trong club.controller.js chỉ có hàm đọc (getAllClubs, getClubDetail). 
++ Thiếu logic API cho việc Tạo, Sửa, Xóa CLB.
+BE 1 (Core)	
+- API Phân quyền (Admin, Chủ nhiệm)	Còn thiếu: 
++ Logic kiểm tra quyền hạn (ví dụ: isAdminMiddleware, isManagerMiddleware). 
++ Hiện tại chỉ có authMiddleware chung.
+BE 2 (Events)	
+- CRUD Event (Sửa, Xóa)	
++ Trong event.controller.js chỉ có Tạo và Đọc danh sách. 
++ Thiếu logic API cho việc Sửa (updateEvent) và Xóa (deleteEvent) sự kiện.
+Project Lead	
++ Luồng Phê duyệt (Approval Flow)	
++ Đây là nghiệp vụ quan trọng nhất (Duyệt thành viên CLB, Duyệt Sự kiện). 
++ Hiện tại BE chưa có API để Chủ nhiệm/Admin thực hiện việc phê duyệt này.
 
 
 Vai trò	Nhiệm vụ còn thiếu	Ghi chú
-FE 2 (Admin)	Form Thêm/Sửa CLB và Sự kiện	Giao diện cho Form Tạo/Sửa CLB (ClubManagerPage.jsx) và Sự kiện (EventManagerPage.jsx) hiện tại chỉ là nút bấm, chưa có Modal hoặc Form logic để nhập liệu.
-FE 1 (UI)	Tích hợp API Cập nhật Hồ sơ	ProfilePage.jsx chỉ hiển thị, chưa có logic form và gọi userService.updateProfile để sửa thông tin.
+Nhiệm vụ còn thiếu	Tên File cần cập nhật	Ghi chú
+- Form Thêm/Sửa CLB	
++ ClubManagerPage.jsx: 
+= Nút "Thêm CLB Mới" chỉ là placeholder. Cần triển khai giao diện Form nhập liệu và logic gọi API Tạo/Sửa CLB.
+
+- Form Thêm/Sửa Sự kiện	
++ EventManagerPage.jsx:
+= Nút "Tạo Sự kiện Mới" chỉ là placeholder. Cần triển khai giao diện Form nhập liệu và logic gọi API Tạo/Sửa Sự kiện.
+
+- Logic Xóa (FE)	
++ ClubManagerPage.jsx:	
+= Nút Xóa CLB chưa được tích hợp API (đã có ở Event Manager, cần áp dụng tương tự cho CLB).
+
+- Cập nhật Hồ sơ
++ 	ProfilePage.jsx	
+= Nút "Chỉnh sửa thông tin" chỉ là placeholder. Cần triển khai Modal/Form sửa và gọi API userService.updateProfile.
+
+3. 🗺️ Lộ trình triển khai FE đã điều chỉnh (Tối ưu nhất)
+Tôi sắp xếp lại lộ trình cho bạn để khớp với BE nhất:
+
+Giai đoạn 1: Kiện toàn cấu trúc (Foundation)
+
+Helper/Utils: Viết file src/utils/api.js (cấu hình Axios interceptors để tự động gắn Token vào mọi request) và formatDate.js.
+
+Protected Route: Tạo src/components/auth/ProtectedRoute.jsx để bảo vệ các trang Admin/Manager.
+
+Auth Flow: Hoàn thiện luồng Login -> Lưu Token + User Info vào Context -> Chuyển hướng đúng trang (User về Home, Admin về Dashboard).
+
+Giai đoạn 2: UI Components (Building Blocks) 4. Core UI: Tạo Modal.jsx, Table.jsx (hoặc dùng thư viện như Ant Design / Material UI / ShadcnUI nếu muốn nhanh), và Toast.jsx. 5. Form: Dựng form "Tạo Sự kiện" và "Tạo CLB" (Chưa cần gọi API, chỉ cần giao diện đẹp và validate input).
+
+Giai đoạn 3: Tích hợp API (Integration) 6. Admin Dashboard: Gọi API getAllClubs, getAllEvents đổ dữ liệu vào Table. 7. CRUD Actions: Gắn API Create/Update/Delete vào các nút trong Modal/Table. 8. Duyệt thành viên (Manager): Làm giao diện bảng danh sách thành viên chờ duyệt cho Manager.
 
 git remote add origin https://github.com/ThanTuan399/BE---FE-quan-ly-CLB-event.git
 git branch -M main

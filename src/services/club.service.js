@@ -1,22 +1,25 @@
 import api from './api';
 
 const clubService = {
-  // Lấy danh sách tất cả CLB
+  // 1. Lấy danh sách (Có sẵn)
   getAllClubs: async () => {
-    const response = await api.get('/clubs');
-    return response.data;
+    return api.get('/clubs');
   },
 
-  // Tạo CLB mới (Dữ liệu gửi lên là JSON)
+  // 2. Tạo mới (Cần thêm)
   createClub: async (clubData) => {
-    const response = await api.post('/clubs', clubData);
-    return response.data;
+    // Payload: { tenCLB, moTa, chuNhiemId, ... }
+    return api.post('/clubs', clubData);
   },
 
-  // Xóa CLB
+  // 3. Cập nhật (Cần thêm)
+  updateClub: async (clubId, clubData) => {
+    return api.put(`/clubs/${clubId}`, clubData);
+  },
+
+  // 4. Xóa (Cần thêm)
   deleteClub: async (clubId) => {
-    const response = await api.delete(`/clubs/${clubId}`);
-    return response.data;
+    return api.delete(`/clubs/${clubId}`);
   }
 };
 

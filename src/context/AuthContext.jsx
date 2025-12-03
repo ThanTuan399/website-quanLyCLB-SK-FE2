@@ -1,46 +1,52 @@
-import { createContext, useState, useEffect } from 'react';
-import authService from '../services/auth.service';
+// 
+
+// src/context/AuthContext.jsx
+import React, { createContext, useContext, useState, useEffect } from 'react';
+// import authService from '../services/auth.service'; // Tạm thời comment lại
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Lưu thông tin user
-  const [loading, setLoading] = useState(true); // Trạng thái tải trang
-
-  // Kiểm tra xem user đã đăng nhập trước đó chưa khi F5 trang
-  useEffect(() => {
-    const checkLogin = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
-        } catch (error) {
-          localStorage.removeItem('token'); // Token lỗi thì xóa đi
-        }
-      }
-      setLoading(false);
+    // --- MOCK DATA: Giả vờ đã đăng nhập với quyền ADMIN ---
+    const mockUser = {
+        userId: 1,
+        hoTen: "Admin Giả Lập",
+        email: "admin@mock.com",
+        avatarUrl: "https://i.pravatar.cc/150?img=3", // Ảnh ngẫu nhiên
+        vaiTro: "ADMIN", // Để vào được trang Admin
+        isManager: true
     };
-    checkLogin();
-  }, []);
 
-  // Hàm Đăng nhập
-  const login = async (email, password) => {
-    const data = await authService.login(email, password);
-    localStorage.setItem('token', data.token); // Lưu token vào trình duyệt
-    setUser(data.user); // Lưu user vào state
-    return data;
-  };
+    // Set user mặc định là mockUser luôn (thay vì null)
+    const [user, setUser] = useState(mockUser); 
+    const [loading, setLoading] = useState(false); // Set false luôn để không phải chờ
 
-  // Hàm Đăng xuất
-  const logout = () => {
-    localStorage.removeItem('token');
-    setUser(null);
-  };
+    /* --- TẠM THỜI COMMENT ĐOẠN CHECK LOGIN THẬT NÀY LẠI ---
+    useEffect(() => {
+        const checkLogin = async () => { ... };
+        checkLogin();
+    }, []);
+    */
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+    // Hàm login giả (để test trang Login)
+    const login = async (email, password) => {
+        // Không gọi API thật nữa
+        console.log("Đăng nhập giả với:", email, password);
+        setUser(mockUser);
+        return { user: mockUser, token: "fake-token-123" };
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null);
+        // window.location.href = '/login'; // Tạm tắt reload để debug dễ hơn
+    };
+
+    return (
+        <AuthContext.Provider value={{ user, login, logout, loading }}>
+            {children} 
+        </AuthContext.Provider>
+    );
 };
+
+export const useAuth = () => useContext(AuthContext);
