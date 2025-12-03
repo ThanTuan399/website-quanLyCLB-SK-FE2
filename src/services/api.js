@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000/api', // QUAN TRỌNG: Port 3000 khớp với Backend
+    // Nếu có biến môi trường VITE_API_URL thì dùng, nếu không thì dùng localhost (để test ở nhà)
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
     headers: {
         'Content-Type': 'application/json',
     },
